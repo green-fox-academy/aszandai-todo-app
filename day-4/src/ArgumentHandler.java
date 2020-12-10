@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class ArgumentHandler {
 
@@ -18,9 +19,7 @@ public class ArgumentHandler {
                     break;
                 }
                 case "-l": {
-                    if (getTasks().isEmpty()) {
-                        System.out.println("No todos for today! :)");
-                    }else System.out.println(getTasks());
+                    System.out.println(getTasks());
                     break;
                 }
 //                case "-r": {
@@ -35,26 +34,32 @@ public class ArgumentHandler {
     }
 
     private String addTask() {
-        Path taskPath = Paths.get("/Users/adamszandai/Repos/aszandai-todo-app/day-4/src/tasks.txt");
-
-
-        return null;
+        String taskString = new String();
+        Path taskPath = Paths.get("tasks.txt");
+        try {
+            Files.writeString(taskPath, taskString);
+        } catch (IOException e) {
+            System.out.println("Tasks are not available.");
+        }
+        return taskString;
     }
 
     private String getTasks() {
-        Path taskPath = Paths.get("/Users/adamszandai/Repos/aszandai-todo-app/day-4/src/tasks.txt");
+        Path taskPath = Paths.get("tasks.txt");
         List<String> tasks = new ArrayList<>();
 
         try {
             tasks = Files.readAllLines(taskPath);
-        }catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Tasks are not available.");
         }
         StringBuilder contentAsString = new StringBuilder();
         int counter = 0;
-        for (int i = 0; i < tasks.size(); i++) {
+        if (tasks.isEmpty()) {
+            System.out.println("No todos for today! :)");
+        } else for (String task : tasks) {
             counter++;
-            System.out.println(counter + " - " + tasks.get(i));
+            System.out.println(counter + " - " + task);
         }
         return contentAsString.toString();
     }
