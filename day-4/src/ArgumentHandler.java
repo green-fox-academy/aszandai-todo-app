@@ -2,10 +2,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class ArgumentHandler {
 
@@ -14,34 +13,29 @@ public class ArgumentHandler {
             System.out.println(getInstructions());
         } else {
             switch (arguments[0]) {
-                case "-a": {
-                    System.out.println(addTask());
-                    break;
+                case "-a" -> {
+                    System.out.println(addTask(arguments[1] + "\n"));
                 }
-                case "-l": {
+                case "-l" -> {
                     System.out.println(getTasks());
-                    break;
                 }
-//                case "-r": {
-//                    System.out.println(arguments[1]);
-//                }
-                default: {
+                default -> {
                     System.out.println("invalid arguments");
-                    break;
                 }
             }
         }
     }
 
-    private String addTask() {
-        String taskString = new String();
-        Path taskPath = Paths.get("tasks.txt");
+    private String addTask(String argument) {
         try {
-            Files.writeString(taskPath, taskString);
-        } catch (IOException e) {
-            System.out.println("Tasks are not available.");
+            Files.write(Paths.get("tasks.txt"), argument.getBytes(), StandardOpenOption.APPEND);
+        } catch (Exception e) {
+            System.out.println("Can't add task.");
         }
-        return taskString;
+
+//        StringBuilder lineBreak = new StringBuilder();
+//        lineBreak.append("\n");
+        return argument;
     }
 
     private String getTasks() {
