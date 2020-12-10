@@ -14,11 +14,18 @@ public class ArgumentHandler {
         } else {
             switch (arguments[0]) {
                 case "-a" -> {
-                    System.out.println(addTask(arguments[1] + "\n"));
+                    try {
+                        System.out.println(addTask("\n" + arguments[1]));
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("Unable to add: no task provided");
+                    }
                 }
                 case "-l" -> {
                     System.out.println(getTasks());
                 }
+//                case "-r" -> {
+//                    System.out.println(getTaskRemoved());
+//                }
                 default -> {
                     System.out.println("invalid arguments");
                 }
@@ -26,28 +33,41 @@ public class ArgumentHandler {
         }
     }
 
-    private String addTask(String argument) {
-        try {
-            Files.write(Paths.get("tasks.txt"), argument.getBytes(), StandardOpenOption.APPEND);
-        } catch (Exception e) {
-            System.out.println("Can't add task.");
-        }
+    private void getTaskRemoved() {
+        List<String> currentList = readFromFile();
 
-//        StringBuilder lineBreak = new StringBuilder();
-//        lineBreak.append("\n");
-        return argument;
+
     }
 
-    private String getTasks() {
+    private List<String> readFromFile() {
         Path taskPath = Paths.get("tasks.txt");
         List<String> tasks = new ArrayList<>();
 
         try {
             tasks = Files.readAllLines(taskPath);
         } catch (IOException e) {
-            System.out.println("Tasks are not available.");
+            System.out.println("Can't read file with tasks");
         }
-        StringBuilder contentAsString = new StringBuilder();
+        return tasks;
+    }
+
+    private String addTask(String argument) {
+        writeToFile(argument);
+        return argument;
+    }
+
+    private void writeToFile(String argument) {
+        try {
+            Files.write(Paths.get("tasks.txt"), argument.getBytes(), StandardOpenOption.APPEND);
+        } catch (Exception e) {
+            System.out.println("Can't add tasks");
+        }
+    }
+
+    private String getTasks() {
+        List<String> tasks = readFromFile();
+        StringBuilder taskListAsString = new StringBuilder();
+
         int counter = 0;
         if (tasks.isEmpty()) {
             System.out.println("No todos for today! :)");
@@ -55,7 +75,7 @@ public class ArgumentHandler {
             counter++;
             System.out.println(counter + " - " + task);
         }
-        return contentAsString.toString();
+        return taskListAsString.toString();
     }
 
     private String getInstructions() {

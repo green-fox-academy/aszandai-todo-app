@@ -2,9 +2,9 @@ import java.io.PrintWriter;
 
 public class Main {
 
-    private static ArgumentHandler argumentHandler = new ArgumentHandler();
+    private static ArgumentHandler todo = new ArgumentHandler();
 
     public static void main(String[] args) {
-        argumentHandler.handleArgument(args);
+        todo.handleArgument(args);
     }
 }
